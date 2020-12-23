@@ -1,0 +1,1246 @@
+PP 5655-EC6 IBM Enterprise COBOL for z/OS  6.3.0 P200319                 Date 12/23/2020  Time 10:46:42   Page     1
+
+Invocation parameters:
+ LIB,CICS,SQL
+
+        IGYOS4090-I   The "LIB" option specification is no longer required.  COBOL library processing is always in effect.
+
+
+Options in effect:
+ NOADATA
+   ADV
+   AFP(NOVOLATILE)
+   QUOTE
+   ARCH(8)
+   ARITH(COMPAT)
+ NOAWO
+ NOBLOCK0
+   BUFSIZE(4096)
+   CICS
+   CODEPAGE(1140)
+ NOCOMPILE(S)
+ NOCOPYLOC
+ NOCOPYRIGHT
+ NOCURRENCY
+   DATA(31)
+   DBCS
+ NODECK
+ NODEFINE
+ NODIAGTRUNC
+   DISPSIGN(COMPAT)
+ NODLL
+ NODUMP
+ NODYNAM
+ NOEXIT
+ NOEXPORTALL
+ NOFASTSRT
+   FLAG(I,I)
+ NOFLAGSTD
+   HGPR(PRESERVE)
+ NOINITCHECK
+ NOINITIAL
+   INLINE
+   INTDATE(ANSI)
+ NOJTC
+   LANGUAGE(EN)
+   LINECOUNT(60)
+ NOLIST
+   LP(32)
+ NOMAP
+   MAXPCF(100000)
+ NOMDECK
+ NONAME
+   NSYMBOL(NATIONAL)
+ NONUMBER
+ NONUMCHECK
+   NUMPROC(NOPFD)
+   OBJECT
+ NOOFFSET
+   OPTIMIZE(0)
+   OUTDD(SYSOUT)PP 5655-EC6 IBM Enterprise COBOL for z/OS  6.3.0 P200319                 Date 12/23/2020  Time 10:46:42   Page     2
+
+ NOPARMCHECK
+   PGMNAME(COMPAT)
+   QUALIFY(COMPAT)
+   RENT
+   RMODE(AUTO)
+ NORULES
+ NOSERVICE
+   SEQUENCE
+   SOURCE
+   SPACE(1)
+   SQL
+   SQLCCSID
+ NOSQLIMS
+ NOSSRANGE
+ NOSTGOPT
+   SUPPRESS
+ NOTERM
+ NOTEST(NODWARF,NOSOURCE,NOSEPARATE)
+ NOTHREAD
+   TRUNC(STD)
+ NOVBREF
+   VLR(STANDARD)
+   VSAMOPENFS(COMPAT)
+ NOWORD
+   XMLPARSE(XMLSS)
+   XREF(FULL)
+   ZONEDATA(PFD)
+   ZWB
+
+        IGYOS4077-I   DSNH4790I DSNHPSRV  DSNHDECP HAS CCSID 500 IN EFFECT
+
+
+        IGYOS4078-W   DSNH4791I DSNHPSRV  CCSID 1140 IS USED TO PROCESS SQL, BUT DSNHDECP HAS EBCDIC CCSID 500 IN EFFECT
+
+
+        IGYOS4078-W   DSNH527I DSNHOPTS  THE PRECOMPILER OR DB2 COPROCESSOR ATTEMPTED TO USE THE DB2-SUPPLIED DSNHDECP MODULE.
+
+
+        IGYOS4077-I   DSNH4760I DSNHPSRV  THE DB2 SQL COPROCESSOR IS USING THE LEVEL 2 INTERFACE UNDER DB2 V12
+
+
+
+SQL Options in effect:
+ ATTACH(TSO)
+ CCSID(1140)
+ CONNECT(2)
+ DEC(15)
+ DECP(DSNHDECP)
+ SQLLEVEL(V12R1M500)
+ ONEPASS
+ PERIOD
+ QUOTESQL
+ STDSQL(NO)
+ SQL(DB2)
+ NOXREF
+ NOSOURCE
+ DSNHDECP LOADED FROM - (DSNC10.SDSNLOAD(DSNHDECP))PP 5655-EC6 IBM Enterprise COBOL for z/OS  6.3.0 P200319                 Date 12/23/2020  Time 10:46:42   Page     3
+
+CICS Options in effect:
+ CICS
+ DEBUG
+ EDF
+ NATLANG(EN)
+ APOST
+ NOSYSEIB
+ NOFEPI
+ NOCPSM
+ LINKAGE
+ LENGTH
+ COBOL2PP 5655-EC6 IBM Enterprise COBOL for z/OS  6.3.0 P200319       LGICDB01  Date 12/23/2020  Time 10:46:42   Page     4
+  LineID  PL SL  ----+-*A-1-B--+----2----+----3----+----4----+----5----+----6----+----7-|--+----8 Map and Cross Reference
+
+  000001               ******************************************************************
+  000002               *                                                                *
+  000003               * LICENSED MATERIALS - PROPERTY OF IBM                           *
+  000004               *                                                                *
+  000005               * "RESTRICTED MATERIALS OF IBM"                                  *
+  000006               *                                                                *
+  000007               * CB12                                                           *
+  000008               *                                                                *
+  000009               * (C) COPYRIGHT IBM CORP. 2011, 2013 ALL RIGHTS RESERVED         *
+  000010               *                                                                *
+  000011               * US GOVERNMENT USERS RESTRICTED RIGHTS - USE, DUPLICATION,      *
+  000012               * OR DISCLOSURE RESTRICTED BY GSA ADP SCHEDULE                   *
+  000013               * CONTRACT WITH IBM CORPORATION                                  *
+  000014               *                                                                *
+  000015               *                                                                *
+  000016               *                    Inquire Customer                            *
+  000017               *                                                                *
+  000018               * Select customer details from DB2 table                         *
+  000019               *                                                                *
+  000020               *                                                                *
+  000021               *                                                                *
+  000022               ******************************************************************
+  000023                IDENTIFICATION DIVISION.
+  000024                PROGRAM-ID. LGICDB01.
+  000025                ENVIRONMENT DIVISION.
+  000026                CONFIGURATION SECTION.
+  000027               *
+  000028                DATA DIVISION.
+  000029
+  000030                WORKING-STORAGE SECTION.
+  000031
+  000032               *----------------------------------------------------------------*
+  000033               * Common defintions                                              *
+  000034               *----------------------------------------------------------------*
+  000035               * Run time (debug) infomation for this invocation
+  000036                 01  WS-HEADER.                                                           * *
+  000037                    03 WS-EYECATCHER            PIC X(16)
+  000038                                                 VALUE 'LGICDB01------WS'.
+  000039                    03 WS-TRANSID               PIC X(4).
+  000040                    03 WS-TERMID                PIC X(4).
+  000041                    03 WS-TASKNUM               PIC 9(7).
+  000042                    03 WS-FILLER                PIC X.
+  000043                    03 WS-ADDR-DFHCOMMAREA      USAGE is POINTER.
+  000044                    03 WS-CALEN                 PIC S9(4) COMP.
+  000045
+  000046               * Variables for time/date processing
+  000047                01  WS-ABSTIME                  PIC S9(8) COMP VALUE +0.
+  000048                01  WS-TIME                     PIC X(8)  VALUE SPACES.                   IMP
+  000049                01  WS-DATE                     PIC X(10) VALUE SPACES.                   IMP
+  000050
+  000051               * Error Message structure
+  000052                01  ERROR-MSG.
+  000053                    03 EM-DATE                  PIC X(8)  VALUE SPACES.                   IMP
+  000054                    03 FILLER                   PIC X     VALUE SPACES.                   IMP
+  000055                    03 EM-TIME                  PIC X(6)  VALUE SPACES.                   IMP
+  000056                    03 FILLER                   PIC X(9)  VALUE ' LGICUS01'.
+  000057                    03 EM-VARIABLE.PP 5655-EC6 IBM Enterprise COBOL for z/OS  6.3.0 P200319       LGICDB01  Date 12/23/2020  Time 10:46:42   Page     5
+  LineID  PL SL  ----+-*A-1-B--+----2----+----3----+----4----+----5----+----6----+----7-|--+----8 Map and Cross Reference
+
+  000058                      05 FILLER                 PIC X(6)  VALUE ' CNUM='.
+  000059                      05 EM-CUSNUM              PIC X(10)  VALUE SPACES.                  IMP
+  000060                      05 FILLER                 PIC X(6)  VALUE ' PNUM='.
+  000061                      05 EM-POLNUM              PIC X(10)  VALUE SPACES.                  IMP
+  000062                      05 EM-SQLREQ              PIC X(16) VALUE SPACES.                   IMP
+  000063                      05 FILLER                 PIC X(9)  VALUE ' SQLCODE='.
+  000064                      05 EM-SQLRC               PIC +9(5) USAGE DISPLAY.
+  000065
+  000066                01 CA-ERROR-MSG.
+  000067                    03 FILLER                PIC X(9)  VALUE 'COMMAREA='.
+  000068                    03 CA-DATA               PIC X(90) VALUE SPACES.                      IMP
+  000069               *----------------------------------------------------------------*
+  000070               * Fields to be used to calculate if commarea is large enough
+  000071                01  WS-COMMAREA-LENGTHS.
+  000072                    03 WS-CA-HEADERTRAILER-LEN  PIC S9(4) COMP VALUE +18.
+  000073                    03 WS-REQUIRED-CA-LEN       PIC S9(4)      VALUE +0.
+  000074
+  000075               *----------------------------------------------------------------*
+  000076               * Definitions required by SQL statement                          *
+  000077               *   DB2 datatypes to COBOL equivalents                           *
+  000078               *     SMALLINT    :   PIC S9(4) COMP                             *
+  000079               *     INTEGER     :   PIC S9(9) COMP                             *
+  000080               *     DATE        :   PIC X(10)                                  *
+  000081               *     TIMESTAMP   :   PIC X(26)                                  *
+  000082               *----------------------------------------------------------------*
+  000083               * Host variables for input to DB2 integer types
+  000084                01  DB2-IN-INTEGERS.
+  000085                    03 DB2-CUSTOMERNUMBER-INT   PIC S9(9) COMP.
+  000086
+  000087                    COPY LGPOLICY.
+  000088C              ******************************************************************
+  000089C              *                                                                *
+  000090C              * LICENSED MATERIALS - PROPERTY OF IBM                           *
+  000091C              *                                                                *
+  000092C              * "RESTRICTED MATERIALS OF IBM"                                  *
+  000093C              *                                                                *
+  000094C              * CB12                                                           *
+  000095C              *                                                                *
+  000096C              * (C) COPYRIGHT IBM CORP. 2011, 2013 ALL RIGHTS RESERVED         *
+  000097C              *                                                                *
+  000098C              * US GOVERNMENT USERS RESTRICTED RIGHTS - USE, DUPLICATION,      *
+  000099C              * OR DISCLOSURE RESTRICTED BY GSA ADP SCHEDULE                   *
+  000100C              * CONTRACT WITH IBM CORPORATION                                  *
+  000101C              *                                                                *
+  000102C              ******************************************************************
+  000103C              *               COPYBOOK for Policy details                      *
+  000104C              *                                                                *
+  000105C              *   Structures to map values obtained from DB2 tables:           *
+  000106C              *   Customer, Policy, Endowment, House and Motor.                *
+  000107C              *                                                                *
+  000108C              *   All lengths of policy fields will be defined here so that    *
+  000109C              *   if any of the DB2 table contents change the lengths will     *
+  000110C              *   only need to be changed here.                                *
+  000111C              *                                                                *
+  000112C              ******************************************************************
+  000113C               01  WS-POLICY-LENGTHS.
+  000114C                   03 WS-CUSTOMER-LEN          PIC S9(4) COMP VALUE +72.PP 5655-EC6 IBM Enterprise COBOL for z/OS  6.3.0 P200319       LGICDB01  Date 12/23/2020  Time 10:46:42   Page     6
+  LineID  PL SL  ----+-*A-1-B--+----2----+----3----+----4----+----5----+----6----+----7-|--+----8 Map and Cross Reference
+
+  000115C                   03 WS-POLICY-LEN            PIC S9(4) COMP VALUE +72.
+  000116C                   03 WS-ENDOW-LEN             PIC S9(4) COMP VALUE +52.
+  000117C                   03 WS-HOUSE-LEN             PIC S9(4) COMP VALUE +58.
+  000118C                   03 WS-MOTOR-LEN             PIC S9(4) COMP VALUE +65.
+  000119C                   03 WS-COMM-LEN              PIC S9(4) COMP VALUE +1102.
+  000120C                   03 WS-CLAIM-LEN             PIC S9(4) COMP VALUE +546.
+  000121C                   03 WS-FULL-ENDOW-LEN        PIC S9(4) COMP VALUE +124.
+  000122C                   03 WS-FULL-HOUSE-LEN        PIC S9(4) COMP VALUE +130.
+  000123C                   03 WS-FULL-MOTOR-LEN        PIC S9(4) COMP VALUE +137.
+  000124C                   03 WS-FULL-COMM-LEN         PIC S9(4) COMP VALUE +1174.
+  000125C                   03 WS-FULL-CLAIM-LEN        PIC S9(4) COMP VALUE +618.
+  000126C                   03 WS-SUMRY-ENDOW-LEN       PIC S9(4) COMP VALUE +25.
+  000127C
+  000128C               01  DB2-CUSTOMER.
+  000129C                   03 DB2-FIRSTNAME            PIC X(10).
+  000130C                   03 DB2-LASTNAME             PIC X(20).
+  000131C                   03 DB2-DATEOFBIRTH          PIC X(10).
+  000132C                   03 DB2-HOUSENAME            PIC X(20).
+  000133C                   03 DB2-HOUSENUMBER          PIC X(4).
+  000134C                   03 DB2-POSTCODE             PIC X(8).
+  000135C                   03 DB2-PHONE-MOBILE         PIC X(20).
+  000136C                   03 DB2-PHONE-HOME           PIC X(20).
+  000137C                   03 DB2-EMAIL-ADDRESS        PIC X(100).
+  000138C
+  000139C               01  DB2-POLICY.
+  000140C                   03 DB2-POLICYTYPE           PIC X.
+  000141C                   03 DB2-POLICYNUMBER         PIC 9(10).
+  000142C                   03 DB2-POLICY-COMMON.
+  000143C                      05 DB2-ISSUEDATE         PIC X(10).
+  000144C                      05 DB2-EXPIRYDATE        PIC X(10).
+  000145C                      05 DB2-LASTCHANGED       PIC X(26).
+  000146C                      05 DB2-BROKERID          PIC 9(10).
+  000147C                      05 DB2-BROKERSREF        PIC X(10).
+  000148C                      05 DB2-PAYMENT           PIC 9(6).
+  000149C
+  000150C               01  DB2-ENDOWMENT.
+  000151C                   03 DB2-ENDOW-FIXED.
+  000152C                      05 DB2-E-WITHPROFITS      PIC X.
+  000153C                      05 DB2-E-EQUITIES         PIC X.
+  000154C                      05 DB2-E-MANAGEDFUND      PIC X.
+  000155C                      05 DB2-E-FUNDNAME         PIC X(10).
+  000156C                      05 DB2-E-TERM             PIC 9(2).
+  000157C                      05 DB2-E-SUMASSURED       PIC 9(6).
+  000158C                      05 DB2-E-LIFEASSURED      PIC X(31).
+  000159C                   03 DB2-E-PADDINGDATA         PIC X(32611).
+  000160C
+  000161C               01  DB2-HOUSE.
+  000162C                   03 DB2-H-PROPERTYTYPE       PIC X(15).
+  000163C                   03 DB2-H-BEDROOMS           PIC 9(3).
+  000164C                   03 DB2-H-VALUE              PIC 9(8).
+  000165C                   03 DB2-H-HOUSENAME          PIC X(20).
+  000166C                   03 DB2-H-HOUSENUMBER        PIC X(4).
+  000167C                   03 DB2-H-POSTCODE           PIC X(8).
+  000168C
+  000169C               01  DB2-MOTOR.
+  000170C                   03 DB2-M-MAKE               PIC X(15).
+  000171C                   03 DB2-M-MODEL              PIC X(15).PP 5655-EC6 IBM Enterprise COBOL for z/OS  6.3.0 P200319       LGICDB01  Date 12/23/2020  Time 10:46:42   Page     7
+  LineID  PL SL  ----+-*A-1-B--+----2----+----3----+----4----+----5----+----6----+----7-|--+----8 Map and Cross Reference
+
+  000172C                   03 DB2-M-VALUE              PIC 9(6).
+  000173C                   03 DB2-M-REGNUMBER          PIC X(7).
+  000174C                   03 DB2-M-COLOUR             PIC X(8).
+  000175C                   03 DB2-M-CC                 PIC 9(4).
+  000176C                   03 DB2-M-MANUFACTURED       PIC X(10).
+  000177C                   03 DB2-M-PREMIUM            PIC 9(6).
+  000178C                   03 DB2-M-ACCIDENTS          PIC 9(6).
+  000179C
+  000180C               01  DB2-COMMERCIAL.
+  000181C                   03 DB2-B-Address            PIC X(255).
+  000182C                   03 DB2-B-Postcode           PIC X(8).
+  000183C                   03 DB2-B-Latitude           PIC X(11).
+  000184C                   03 DB2-B-Longitude          PIC X(11).
+  000185C                   03 DB2-B-Customer           PIC X(255).
+  000186C                   03 DB2-B-PropType           PIC X(255).
+  000187C                   03 DB2-B-FirePeril          PIC 9(4).
+  000188C                   03 DB2-B-FirePremium        PIC 9(8).
+  000189C                   03 DB2-B-CrimePeril         PIC 9(4).
+  000190C                   03 DB2-B-CrimePremium       PIC 9(8).
+  000191C                   03 DB2-B-FloodPeril         PIC 9(4).
+  000192C                   03 DB2-B-FloodPremium       PIC 9(8).
+  000193C                   03 DB2-B-WeatherPeril       PIC 9(4).
+  000194C                   03 DB2-B-WeatherPremium     PIC 9(8).
+  000195C                   03 DB2-B-Status             PIC 9(4).
+  000196C                   03 DB2-B-RejectReason       PIC X(255).
+  000197C
+  000198C               01  DB2-CLAIM.
+  000199C                   03 DB2-C-Num                PIC 9(10).
+  000200C                   03 DB2-C-Date               PIC X(10).
+  000201C                   03 DB2-C-Paid               PIC 9(8).
+  000202C                   03 DB2-C-Value              PIC 9(8).
+  000203C                   03 DB2-C-Cause              PIC X(255).
+  000204C                   03 DB2-C-Observations       PIC X(255).
+  000205               *----------------------------------------------------------------*
+  000206
+  000207               *----------------------------------------------------------------*
+  000208               *    DB2 CONTROL
+  000209               *----------------------------------------------------------------*
+  000210               * SQLCA DB2 communications area
+  000211                    EXEC SQL
+  000212                        INCLUDE SQLCA
+  000213                    END-EXEC.
+  000214C               01 SQLCA GLOBAL VOLATILE.
+  000215C                   05 SQLCAID PIC X(8).
+  000216C                   05 SQLCABC PIC S9(9) COMP-5.
+  000217C                   05 SQLCODE PIC S9(9) COMP-5.
+  000218C                   05 SQLERRM.
+  000219C                     49 SQLERRML PIC S9(4) COMP-5.
+  000220C                     49 SQLERRMC PIC X(70).
+  000221C                   05 SQLERRP PIC X(8).
+  000222C                   05 SQLERRD PIC S9(9) COMP-5
+  000223C                              OCCURS 6 TIMES.
+  000224C                   05 SQLWARN.
+  000225C                     10 SQLWARN0 PIC X.
+  000226C                     10 SQLWARN1 PIC X.
+  000227C                     10 SQLWARN2 PIC X.
+  000228C                     10 SQLWARN3 PIC X.PP 5655-EC6 IBM Enterprise COBOL for z/OS  6.3.0 P200319       LGICDB01  Date 12/23/2020  Time 10:46:42   Page     8
+  LineID  PL SL  ----+-*A-1-B--+----2----+----3----+----4----+----5----+----6----+----7-|--+----8 Map and Cross Reference
+
+  000229C                     10 SQLWARN4 PIC X.
+  000230C                     10 SQLWARN5 PIC X.
+  000231C                     10 SQLWARN6 PIC X.
+  000232C                     10 SQLWARN7 PIC X.
+  000233C                   05 SQLEXT.
+  000234C                     10 SQLWARN8 PIC X.
+  000235C                     10 SQLWARN9 PIC X.
+  000236C                     10 SQLWARNA PIC X.
+  000237C                     10 SQLSTATE PIC X(5).
+  000238               *
+  000239               *
+  000240               ******************************************************************
+  000241               *    L I N K A G E     S E C T I O N
+  000242               ******************************************************************
+  000243                LINKAGE SECTION.
+  000244
+  000245                01  DFHCOMMAREA.
+  000246                    EXEC SQL
+  000247                      INCLUDE LGCMAREA
+  000248                    END-EXEC.
+  000249C              ******************************************************************
+  000250C              *                                                                *
+  000251C              * LICENSED MATERIALS - PROPERTY OF IBM                           *
+  000252C              *                                                                *
+  000253C              * "RESTRICTED MATERIALS OF IBM"                                  *
+  000254C              *                                                                *
+  000255C              * CB12                                                           *
+  000256C              *                                                                *
+  000257C              * (C) COPYRIGHT IBM CORP. 2011, 2013 ALL RIGHTS RESERVED         *
+  000258C              *                                                                *
+  000259C              * US GOVERNMENT USERS RESTRICTED RIGHTS - USE, DUPLICATION,      *
+  000260C              * OR DISCLOSURE RESTRICTED BY GSA ADP SCHEDULE                   *
+  000261C              * CONTRACT WITH IBM CORPORATION                                  *
+  000262C              *                                                                *
+  000263C              *                                                                *
+  000264C              *               COPYBOOK for COMMAREA structure                  *
+  000265C              *                                                                *
+  000266C              *   This commarea can be used for all functions                  *
+  000267C              *                                                                *
+  000268C              *                                                                *
+  000269C              *                                                                *
+  000270C              ******************************************************************
+  000271C                   03 CA-REQUEST-ID            PIC X(6).
+  000272C                   03 CA-RETURN-CODE           PIC 9(2).
+  000273C                   03 CA-CUSTOMER-NUM          PIC 9(10).
+  000274C                   03 CA-REQUEST-SPECIFIC      PIC X(32482).
+  000275C              *    Fields used in INQ All and ADD customer
+  000276C                   03 CA-CUSTOMER-REQUEST REDEFINES CA-REQUEST-SPECIFIC.                 274
+  000277C                      05 CA-FIRST-NAME         PIC X(10).
+  000278C                      05 CA-LAST-NAME          PIC X(20).
+  000279C                      05 CA-DOB                PIC X(10).
+  000280C                      05 CA-HOUSE-NAME         PIC X(20).
+  000281C                      05 CA-HOUSE-NUM          PIC X(4).
+  000282C                      05 CA-POSTCODE           PIC X(8).
+  000283C                      05 CA-NUM-POLICIES       PIC 9(3).
+  000284C                      05 CA-PHONE-MOBILE       PIC X(20).
+  000285C                      05 CA-PHONE-HOME         PIC X(20).PP 5655-EC6 IBM Enterprise COBOL for z/OS  6.3.0 P200319       LGICDB01  Date 12/23/2020  Time 10:46:42   Page     9
+  LineID  PL SL  ----+-*A-1-B--+----2----+----3----+----4----+----5----+----6----+----7-|--+----8 Map and Cross Reference
+
+  000286C                      05 CA-EMAIL-ADDRESS      PIC X(100).
+  000287C                      05 CA-POLICY-DATA        PIC X(32267).
+  000288C              *    Fields used in Customer security call
+  000289C                   03 CA-CUSTSECR-REQUEST REDEFINES CA-REQUEST-SPECIFIC.                 274
+  000290C                      05 CA-CUSTSECR-PASS      PIC X(32).
+  000291C                      05 CA-CUSTSECR-COUNT     PIC X(4).
+  000292C                      05 CA-CUSTSECR-STATE     PIC X.
+  000293C                      05 CA-CUSTSECR-DATA      PIC X(32445).
+  000294C              *    Fields used in INQ, UPD, ADD & DELETE policy
+  000295C                   03 CA-POLICY-REQUEST REDEFINES CA-REQUEST-SPECIFIC.                   274
+  000296C                      05 CA-POLICY-NUM         PIC 9(10).
+  000297C              *       Common policy details
+  000298C                      05 CA-POLICY-COMMON.
+  000299C                         07 CA-ISSUE-DATE      PIC X(10).
+  000300C                         07 CA-EXPIRY-DATE     PIC X(10).
+  000301C                         07 CA-LASTCHANGED     PIC X(26).
+  000302C                         07 CA-BROKERID        PIC 9(10).
+  000303C                         07 CA-BROKERSREF      PIC X(10).
+  000304C                         07 CA-PAYMENT         PIC 9(6).
+  000305C                      05 CA-POLICY-SPECIFIC    PIC X(32400).
+  000306C              *       Endowment policy description
+  000307C                      05 CA-ENDOWMENT REDEFINES CA-POLICY-SPECIFIC.                      305
+  000308C                         07 CA-E-WITH-PROFITS    PIC X.
+  000309C                         07 CA-E-EQUITIES        PIC X.
+  000310C                         07 CA-E-MANAGED-FUND    PIC X.
+  000311C                         07 CA-E-FUND-NAME       PIC X(10).
+  000312C                         07 CA-E-TERM            PIC 99.
+  000313C                         07 CA-E-SUM-ASSURED     PIC 9(6).
+  000314C                         07 CA-E-LIFE-ASSURED    PIC X(31).
+  000315C                         07 CA-E-PADDING-DATA    PIC X(32348).
+  000316C              *       House policy description
+  000317C                      05 CA-HOUSE REDEFINES CA-POLICY-SPECIFIC.                          305
+  000318C                         07 CA-H-PROPERTY-TYPE   PIC X(15).
+  000319C                         07 CA-H-BEDROOMS        PIC 9(3).
+  000320C                         07 CA-H-VALUE           PIC 9(8).
+  000321C                         07 CA-H-HOUSE-NAME      PIC X(20).
+  000322C                         07 CA-H-HOUSE-NUMBER    PIC X(4).
+  000323C                         07 CA-H-POSTCODE        PIC X(8).
+  000324C                         07 CA-H-FILLER          PIC X(32342).
+  000325C              *       Motor policy description
+  000326C                      05 CA-MOTOR REDEFINES CA-POLICY-SPECIFIC.                          305
+  000327C                         07 CA-M-MAKE            PIC X(15).
+  000328C                         07 CA-M-MODEL           PIC X(15).
+  000329C                         07 CA-M-VALUE           PIC 9(6).
+  000330C                         07 CA-M-REGNUMBER       PIC X(7).
+  000331C                         07 CA-M-COLOUR          PIC X(8).
+  000332C                         07 CA-M-CC              PIC 9(4).
+  000333C                         07 CA-M-MANUFACTURED    PIC X(10).
+  000334C                         07 CA-M-PREMIUM         PIC 9(6).
+  000335C                         07 CA-M-ACCIDENTS       PIC 9(6).
+  000336C                         07 CA-M-FILLER          PIC X(32323).
+  000337C              *       Commercial policy description
+  000338C                      05 CA-COMMERCIAL REDEFINES CA-POLICY-SPECIFIC.                     305
+  000339C                         07 CA-B-Address         PIC X(255).
+  000340C                         07 CA-B-Postcode        PIC X(8).
+  000341C                         07 CA-B-Latitude        PIC X(11).
+  000342C                         07 CA-B-Longitude       PIC X(11).PP 5655-EC6 IBM Enterprise COBOL for z/OS  6.3.0 P200319       LGICDB01  Date 12/23/2020  Time 10:46:42   Page    10
+  LineID  PL SL  ----+-*A-1-B--+----2----+----3----+----4----+----5----+----6----+----7-|--+----8 Map and Cross Reference
+
+  000343C                         07 CA-B-Customer        PIC X(255).
+  000344C                         07 CA-B-PropType        PIC X(255).
+  000345C                         07 CA-B-FirePeril       PIC 9(4).
+  000346C                         07 CA-B-FirePremium     PIC 9(8).
+  000347C                         07 CA-B-CrimePeril      PIC 9(4).
+  000348C                         07 CA-B-CrimePremium    PIC 9(8).
+  000349C                         07 CA-B-FloodPeril      PIC 9(4).
+  000350C                         07 CA-B-FloodPremium    PIC 9(8).
+  000351C                         07 CA-B-WeatherPeril    PIC 9(4).
+  000352C                         07 CA-B-WeatherPremium  PIC 9(8).
+  000353C                         07 CA-B-Status          PIC 9(4).
+  000354C                         07 CA-B-RejectReason    PIC X(255).
+  000355C                         07 CA-B-FILLER          PIC X(31298).
+  000356C              *       CLAIM policy description
+  000357C                      05 CA-CLAIM      REDEFINES CA-POLICY-SPECIFIC.                     305
+  000358C                         07 CA-C-Num             PIC 9(10).
+  000359C                         07 CA-C-Date            PIC X(10).
+  000360C                         07 CA-C-Paid            PIC 9(8).
+  000361C                         07 CA-C-Value           PIC 9(8).
+  000362C                         07 CA-C-Cause           PIC X(255).
+  000363C                         07 CA-C-Observations    PIC X(255).
+  000364C                         07 CA-C-FILLER          PIC X(31854).
+  000365
+  000366               ******************************************************************
+  000367               *    P R O C E D U R E S
+  000368               ******************************************************************
+  000369                PROCEDURE DIVISION.                                                       245
+  000370
+  000371               *----------------------------------------------------------------*
+  000372                MAINLINE SECTION.
+  000373
+  000374               *----------------------------------------------------------------*
+  000375               * Common code                                                    *
+  000376               *----------------------------------------------------------------*
+  000377               * initialize working storage variables
+  000378                    INITIALIZE WS-HEADER.                                                 36
+  000379               * set up general variable
+  000380                    MOVE EIBTRNID TO WS-TRANSID.                                          IMP 39
+  000381                    MOVE EIBTRMID TO WS-TERMID.                                           IMP 40
+  000382                    MOVE EIBTASKN TO WS-TASKNUM.                                          IMP 41
+  000383               *----------------------------------------------------------------*
+  000384
+  000385               *----------------------------------------------------------------*
+  000386               * Check commarea and obtain required details                     *
+  000387               *----------------------------------------------------------------*
+  000388               * If NO commarea received issue an ABEND
+  000389                    IF EIBCALEN IS EQUAL TO ZERO                                          IMP IMP
+  000390      1                 MOVE ' NO COMMAREA RECEIVED' TO EM-VARIABLE                       57
+  000391      1                 PERFORM WRITE-ERROR-MESSAGE                                       485
+  000392      1                 EXEC CICS ABEND ABCODE('LGCA') NODUMP END-EXEC                    EXT IMP
+  000393                    END-IF
+  000394
+  000395               * initialize commarea return code to zero
+  000396                    MOVE '00' TO CA-RETURN-CODE                                           272
+  000397                    MOVE EIBCALEN TO WS-CALEN.                                            IMP 44
+  000398                    SET WS-ADDR-DFHCOMMAREA TO ADDRESS OF DFHCOMMAREA.                    43 IMP 245
+  000399PP 5655-EC6 IBM Enterprise COBOL for z/OS  6.3.0 P200319       LGICDB01  Date 12/23/2020  Time 10:46:42   Page    11
+  LineID  PL SL  ----+-*A-1-B--+----2----+----3----+----4----+----5----+----6----+----7-|--+----8 Map and Cross Reference
+
+  000400               * initialize DB2 host variables
+  000401                    INITIALIZE DB2-IN-INTEGERS.                                           84
+  000402
+  000403               *----------------------------------------------------------------*
+  000404               * Process incoming commarea                                      *
+  000405               *----------------------------------------------------------------*
+  000406               * check commarea length - meets minimum requirement
+  000407                    MOVE WS-CUSTOMER-LEN        TO WS-REQUIRED-CA-LEN                     114 73
+  000408                    ADD WS-CA-HEADERTRAILER-LEN TO WS-REQUIRED-CA-LEN                     72 73
+  000409               * if less set error return code and return to caller
+  000410                    IF EIBCALEN IS LESS THAN WS-REQUIRED-CA-LEN                           IMP 73
+  000411      1               MOVE '98' TO CA-RETURN-CODE                                         272
+  000412      1               EXEC CICS RETURN END-EXEC                                           EXT
+  000413                    END-IF
+  000414
+  000415               * Convert commarea customer number to DB2 integer format
+  000416                    MOVE CA-CUSTOMER-NUM TO DB2-CUSTOMERNUMBER-INT                        273 85
+  000417               * and save in error msg field incase required
+  000418                    MOVE CA-CUSTOMER-NUM TO EM-CUSNUM                                     273 59
+  000419
+  000420               *----------------------------------------------------------------*
+  000421               * Obtain details from DB2                                        *
+  000422               *----------------------------------------------------------------*
+  000423               *    Call routine to issue SQL to obtain info from DB2
+  000424                    PERFORM GET-CUSTOMER-INFO.                                            437
+  000425
+  000426               *----------------------------------------------------------------*
+  000427               * END PROGRAM and return to caller                               *
+  000428               *----------------------------------------------------------------*
+  000429                MAINLINE-END.
+  000430
+  000431                    EXEC CICS RETURN END-EXEC.                                            EXT
+  000432
+  000433                MAINLINE-EXIT.
+  000434                    EXIT.
+  000435               *----------------------------------------------------------------*
+  000436
+  000437                GET-CUSTOMER-INFO.
+  000438
+  000439                    EXEC SQL
+  000440                        SELECT FIRSTNAME,
+  000441                               LASTNAME,
+  000442                               DATEOFBIRTH,
+  000443                               HOUSENAME,
+  000444                               HOUSENUMBER,
+  000445                               POSTCODE,
+  000446                               PHONEMOBILE,
+  000447                               PHONEHOME,
+  000448                               EMAILADDRESS
+  000449                        INTO  :CA-FIRST-NAME,                                             277
+  000450                              :CA-LAST-NAME,                                              278
+  000451                              :CA-DOB,                                                    279
+  000452                              :CA-HOUSE-NAME,                                             280
+  000453                              :CA-HOUSE-NUM,                                              281
+  000454                              :CA-POSTCODE,                                               282
+  000455                              :CA-PHONE-MOBILE,                                           284
+  000456                              :CA-PHONE-HOME,                                             285PP 5655-EC6 IBM Enterprise COBOL for z/OS  6.3.0 P200319       LGICDB01  Date 12/23/2020  Time 10:46:42   Page    12
+  LineID  PL SL  ----+-*A-1-B--+----2----+----3----+----4----+----5----+----6----+----7-|--+----8 Map and Cross Reference
+
+  000457                              :CA-EMAIL-ADDRESS                                           286
+  000458                        FROM CUSTOMER
+  000459                        WHERE CUSTOMERNUMBER = :DB2-CUSTOMERNUMBER-INT                    85
+  000460                    END-EXEC.                                                             EXT IMP
+  000461
+  000462                    Evaluate SQLCODE                                                      217
+  000463                      When 0
+  000464      1                 MOVE '00' TO CA-RETURN-CODE                                       272
+  000465               *        The following line has to be commented as part of VTP demo
+  000466      1                 MOVE '1970-01-01' TO CA-DOB                                       279
+  000467                      When 100
+  000468      1                 MOVE '01' TO CA-RETURN-CODE                                       272
+  000469                      When -913
+  000470      1                 MOVE '01' TO CA-RETURN-CODE                                       272
+  000471               *        MOVE '02' TO CA-RETURN-CODE
+  000472                      When Other
+  000473      1                 MOVE '90' TO CA-RETURN-CODE                                       272
+  000474      1                 PERFORM WRITE-ERROR-MESSAGE                                       485
+  000475      1                 EXEC CICS RETURN END-EXEC                                         EXT
+  000476                    END-Evaluate.
+  000477
+  000478                    EXIT.
+  000479
+  000480               *================================================================*
+  000481               * Procedure to write error message to Queues                     *
+  000482               *   message will include Date, Time, Program Name, Customer      *
+  000483               *   Number, Policy Number and SQLCODE.                           *
+  000484               *================================================================*
+  000485                WRITE-ERROR-MESSAGE.
+  000486               * Save SQLCODE in message
+  000487                    MOVE SQLCODE TO EM-SQLRC                                              217 64
+  000488               * Obtain and format current time and date
+  000489                    EXEC CICS ASKTIME ABSTIME(WS-ABSTIME)
+  000490                    END-EXEC                                                              EXT 47
+  000491                    EXEC CICS FORMATTIME ABSTIME(WS-ABSTIME)
+  000492                              MMDDYYYY(WS-DATE)
+  000493                              TIME(WS-TIME)
+  000494                    END-EXEC                                                              EXT 49
+  000495                    MOVE WS-DATE TO EM-DATE                                               49 53
+  000496                    MOVE WS-TIME TO EM-TIME                                               48 55
+  000497               * Write output message to TDQ
+  000498                    EXEC CICS LINK PROGRAM('LGSTSQ')
+  000499                              COMMAREA(ERROR-MSG)
+  000500                              LENGTH(LENGTH OF ERROR-MSG)
+  000501                    END-EXEC.                                                             EXT IMP
+  000502               * Write 90 bytes or as much as we have of commarea to TDQ
+  000503                    IF EIBCALEN > 0 THEN                                                  IMP
+  000504      1               IF EIBCALEN < 91 THEN                                               IMP
+  000505      2                 MOVE DFHCOMMAREA(1:EIBCALEN) TO CA-DATA                           245 IMP 68
+  000506      2                 EXEC CICS LINK PROGRAM('LGSTSQ')
+  000507      2                           COMMAREA(CA-ERROR-MSG)
+  000508      2                           LENGTH(LENGTH OF CA-ERROR-MSG)
+  000509      2                 END-EXEC                                                          EXT IMP
+  000510      1               ELSE
+  000511      2                 MOVE DFHCOMMAREA(1:90) TO CA-DATA                                 245 68
+  000512      2                 EXEC CICS LINK PROGRAM('LGSTSQ')
+  000513      2                           COMMAREA(CA-ERROR-MSG)PP 5655-EC6 IBM Enterprise COBOL for z/OS  6.3.0 P200319       LGICDB01  Date 12/23/2020  Time 10:46:42   Page    13
+  LineID  PL SL  ----+-*A-1-B--+----2----+----3----+----4----+----5----+----6----+----7-|--+----8 Map and Cross Reference
+
+  000514      2                           LENGTH(LENGTH OF CA-ERROR-MSG)
+  000515      2                 END-EXEC                                                          EXT IMP
+  000516      1               END-IF
+  000517                    END-IF.
+  000518                    EXIT.
+
+==000518==> IGYSC0208-I DSNH050I DSNHPSRV  WARNINGS HAVE BEEN SUPPRESSED DUE TO LACK OF TABLE
+                        DECLARATIONS
+PP 5655-EC6 IBM Enterprise COBOL for z/OS  6.3.0 P200319       LGICDB01  Date 12/23/2020  Time 10:46:42   Page    14
+
+An "M" preceding a data-name reference indicates that the data-name is modified by this reference.
+
+ Defined   Cross-reference of data names   References
+
+     339   CA-B-ADDRESS
+     347   CA-B-CRIMEPERIL
+     348   CA-B-CRIMEPREMIUM
+     343   CA-B-CUSTOMER
+     355   CA-B-FILLER
+     345   CA-B-FIREPERIL
+     346   CA-B-FIREPREMIUM
+     349   CA-B-FLOODPERIL
+     350   CA-B-FLOODPREMIUM
+     341   CA-B-LATITUDE
+     342   CA-B-LONGITUDE
+     340   CA-B-POSTCODE
+     344   CA-B-PROPTYPE
+     354   CA-B-REJECTREASON
+     353   CA-B-STATUS
+     351   CA-B-WEATHERPERIL
+     352   CA-B-WEATHERPREMIUM
+     302   CA-BROKERID
+     303   CA-BROKERSREF
+     362   CA-C-CAUSE
+     359   CA-C-DATE
+     364   CA-C-FILLER
+     358   CA-C-NUM
+     363   CA-C-OBSERVATIONS
+     360   CA-C-PAID
+     361   CA-C-VALUE
+     357   CA-CLAIM
+     338   CA-COMMERCIAL
+     273   CA-CUSTOMER-NUM. . . . . . . .  416 418
+     276   CA-CUSTOMER-REQUEST
+     291   CA-CUSTSECR-COUNT
+     293   CA-CUSTSECR-DATA
+     290   CA-CUSTSECR-PASS
+     289   CA-CUSTSECR-REQUEST
+     292   CA-CUSTSECR-STATE
+      68   CA-DATA. . . . . . . . . . . .  M505 M511
+     279   CA-DOB . . . . . . . . . . . .  451 M466
+     309   CA-E-EQUITIES
+     311   CA-E-FUND-NAME
+     314   CA-E-LIFE-ASSURED
+     310   CA-E-MANAGED-FUND
+     315   CA-E-PADDING-DATA
+     313   CA-E-SUM-ASSURED
+     312   CA-E-TERM
+     308   CA-E-WITH-PROFITS
+     286   CA-EMAIL-ADDRESS . . . . . . .  457
+     307   CA-ENDOWMENT
+      66   CA-ERROR-MSG
+     300   CA-EXPIRY-DATE
+     277   CA-FIRST-NAME. . . . . . . . .  449
+     319   CA-H-BEDROOMS
+     324   CA-H-FILLER
+     321   CA-H-HOUSE-NAME
+     322   CA-H-HOUSE-NUMBERPP 5655-EC6 IBM Enterprise COBOL for z/OS  6.3.0 P200319       LGICDB01  Date 12/23/2020  Time 10:46:42   Page    15
+
+ Defined   Cross-reference of data names   References
+
+
+     323   CA-H-POSTCODE
+     318   CA-H-PROPERTY-TYPE
+     320   CA-H-VALUE
+     317   CA-HOUSE
+     280   CA-HOUSE-NAME. . . . . . . . .  452
+     281   CA-HOUSE-NUM . . . . . . . . .  453
+     299   CA-ISSUE-DATE
+     278   CA-LAST-NAME . . . . . . . . .  450
+     301   CA-LASTCHANGED
+     335   CA-M-ACCIDENTS
+     332   CA-M-CC
+     331   CA-M-COLOUR
+     336   CA-M-FILLER
+     327   CA-M-MAKE
+     333   CA-M-MANUFACTURED
+     328   CA-M-MODEL
+     334   CA-M-PREMIUM
+     330   CA-M-REGNUMBER
+     329   CA-M-VALUE
+     326   CA-MOTOR
+     283   CA-NUM-POLICIES
+     304   CA-PAYMENT
+     285   CA-PHONE-HOME. . . . . . . . .  456
+     284   CA-PHONE-MOBILE. . . . . . . .  455
+     298   CA-POLICY-COMMON
+     287   CA-POLICY-DATA
+     296   CA-POLICY-NUM
+     295   CA-POLICY-REQUEST
+     305   CA-POLICY-SPECIFIC . . . . . .  307 317 326 338 357
+     282   CA-POSTCODE. . . . . . . . . .  454
+     271   CA-REQUEST-ID
+     274   CA-REQUEST-SPECIFIC. . . . . .  276 289 295
+     272   CA-RETURN-CODE . . . . . . . .  M396 M411 M464 M468 M470 M473
+     181   DB2-B-ADDRESS
+     189   DB2-B-CRIMEPERIL
+     190   DB2-B-CRIMEPREMIUM
+     185   DB2-B-CUSTOMER
+     187   DB2-B-FIREPERIL
+     188   DB2-B-FIREPREMIUM
+     191   DB2-B-FLOODPERIL
+     192   DB2-B-FLOODPREMIUM
+     183   DB2-B-LATITUDE
+     184   DB2-B-LONGITUDE
+     182   DB2-B-POSTCODE
+     186   DB2-B-PROPTYPE
+     196   DB2-B-REJECTREASON
+     195   DB2-B-STATUS
+     193   DB2-B-WEATHERPERIL
+     194   DB2-B-WEATHERPREMIUM
+     146   DB2-BROKERID
+     147   DB2-BROKERSREF
+     203   DB2-C-CAUSE
+     200   DB2-C-DATE
+     199   DB2-C-NUM
+     204   DB2-C-OBSERVATIONSPP 5655-EC6 IBM Enterprise COBOL for z/OS  6.3.0 P200319       LGICDB01  Date 12/23/2020  Time 10:46:42   Page    16
+
+ Defined   Cross-reference of data names   References
+
+
+     201   DB2-C-PAID
+     202   DB2-C-VALUE
+     198   DB2-CLAIM
+     180   DB2-COMMERCIAL
+     128   DB2-CUSTOMER
+      85   DB2-CUSTOMERNUMBER-INT . . . .  M416 459
+     131   DB2-DATEOFBIRTH
+     153   DB2-E-EQUITIES
+     155   DB2-E-FUNDNAME
+     158   DB2-E-LIFEASSURED
+     154   DB2-E-MANAGEDFUND
+     159   DB2-E-PADDINGDATA
+     157   DB2-E-SUMASSURED
+     156   DB2-E-TERM
+     152   DB2-E-WITHPROFITS
+     137   DB2-EMAIL-ADDRESS
+     151   DB2-ENDOW-FIXED
+     150   DB2-ENDOWMENT
+     144   DB2-EXPIRYDATE
+     129   DB2-FIRSTNAME
+     163   DB2-H-BEDROOMS
+     165   DB2-H-HOUSENAME
+     166   DB2-H-HOUSENUMBER
+     167   DB2-H-POSTCODE
+     162   DB2-H-PROPERTYTYPE
+     164   DB2-H-VALUE
+     161   DB2-HOUSE
+     132   DB2-HOUSENAME
+     133   DB2-HOUSENUMBER
+      84   DB2-IN-INTEGERS. . . . . . . .  M401
+     143   DB2-ISSUEDATE
+     145   DB2-LASTCHANGED
+     130   DB2-LASTNAME
+     178   DB2-M-ACCIDENTS
+     175   DB2-M-CC
+     174   DB2-M-COLOUR
+     170   DB2-M-MAKE
+     176   DB2-M-MANUFACTURED
+     171   DB2-M-MODEL
+     177   DB2-M-PREMIUM
+     173   DB2-M-REGNUMBER
+     172   DB2-M-VALUE
+     169   DB2-MOTOR
+     148   DB2-PAYMENT
+     136   DB2-PHONE-HOME
+     135   DB2-PHONE-MOBILE
+     139   DB2-POLICY
+     142   DB2-POLICY-COMMON
+     141   DB2-POLICYNUMBER
+     140   DB2-POLICYTYPE
+     134   DB2-POSTCODE
+       0   DFHB0020 . . . . . . . . . . .  501 509 515
+     245   DFHCOMMAREA. . . . . . . . . .  369 398 505 511
+       0   DFHC0040 . . . . . . . . . . .  392
+       0   EIBCALEN . . . . . . . . . . .  389 397 410 503 504 505PP 5655-EC6 IBM Enterprise COBOL for z/OS  6.3.0 P200319       LGICDB01  Date 12/23/2020  Time 10:46:42   Page    17
+
+ Defined   Cross-reference of data names   References
+
+
+       0   EIBTASKN . . . . . . . . . . .  382
+       0   EIBTRMID . . . . . . . . . . .  381
+       0   EIBTRNID . . . . . . . . . . .  380
+      59   EM-CUSNUM. . . . . . . . . . .  M418
+      53   EM-DATE. . . . . . . . . . . .  M495
+      61   EM-POLNUM
+      64   EM-SQLRC . . . . . . . . . . .  M487
+      62   EM-SQLREQ
+      55   EM-TIME. . . . . . . . . . . .  M496
+      57   EM-VARIABLE. . . . . . . . . .  M390
+      52   ERROR-MSG
+       0   SQL---PLIST. . . . . . . . . .  460
+     214   SQLCA
+     216   SQLCABC
+     215   SQLCAID
+     217   SQLCODE. . . . . . . . . . . .  462 487
+     222   SQLERRD
+     218   SQLERRM
+     220   SQLERRMC
+     219   SQLERRML
+     221   SQLERRP
+     233   SQLEXT
+     237   SQLSTATE
+     224   SQLWARN
+     236   SQLWARNA
+     225   SQLWARN0
+     226   SQLWARN1
+     227   SQLWARN2
+     228   SQLWARN3
+     229   SQLWARN4
+     230   SQLWARN5
+     231   SQLWARN6
+     232   SQLWARN7
+     234   SQLWARN8
+     235   SQLWARN9
+      47   WS-ABSTIME . . . . . . . . . .  490
+      43   WS-ADDR-DFHCOMMAREA. . . . . .  M398
+      72   WS-CA-HEADERTRAILER-LEN. . . .  408
+      44   WS-CALEN . . . . . . . . . . .  M397
+     120   WS-CLAIM-LEN
+     119   WS-COMM-LEN
+      71   WS-COMMAREA-LENGTHS
+     114   WS-CUSTOMER-LEN. . . . . . . .  407
+      49   WS-DATE. . . . . . . . . . . .  494 495
+     116   WS-ENDOW-LEN
+      37   WS-EYECATCHER
+      42   WS-FILLER
+     125   WS-FULL-CLAIM-LEN
+     124   WS-FULL-COMM-LEN
+     121   WS-FULL-ENDOW-LEN
+     122   WS-FULL-HOUSE-LEN
+     123   WS-FULL-MOTOR-LEN
+      36   WS-HEADER. . . . . . . . . . .  M378
+     117   WS-HOUSE-LEN
+     118   WS-MOTOR-LENPP 5655-EC6 IBM Enterprise COBOL for z/OS  6.3.0 P200319       LGICDB01  Date 12/23/2020  Time 10:46:42   Page    18
+
+ Defined   Cross-reference of data names   References
+
+
+     115   WS-POLICY-LEN
+     113   WS-POLICY-LENGTHS
+      73   WS-REQUIRED-CA-LEN . . . . . .  M407 M408 410
+     126   WS-SUMRY-ENDOW-LEN
+      41   WS-TASKNUM . . . . . . . . . .  M382
+      40   WS-TERMID. . . . . . . . . . .  M381
+      48   WS-TIME. . . . . . . . . . . .  496
+      39   WS-TRANSID . . . . . . . . . .  M380PP 5655-EC6 IBM Enterprise COBOL for z/OS  6.3.0 P200319       LGICDB01  Date 12/23/2020  Time 10:46:42   Page    19
+
+Context usage is indicated by the letter preceding a procedure-name reference.
+These letters and their meanings are:
+    A = ALTER (procedure-name)
+    D = GO TO (procedure-name) DEPENDING ON
+    E = End of range of (PERFORM) through (procedure-name)
+    G = GO TO (procedure-name)
+    P = PERFORM (procedure-name)
+    T = (ALTER) TO PROCEED TO (procedure-name)
+    U = USE FOR DEBUGGING (procedure-name)
+
+ Defined   Cross-reference of procedures   References
+
+     437   GET-CUSTOMER-INFO. . . . . . .  P424
+     372   MAINLINE
+     429   MAINLINE-END
+     433   MAINLINE-EXIT
+     485   WRITE-ERROR-MESSAGE. . . . . .  P391 P474PP 5655-EC6 IBM Enterprise COBOL for z/OS  6.3.0 P200319       LGICDB01  Date 12/23/2020  Time 10:46:42   Page    20
+
+ Defined   Cross-reference of programs     References
+
+EXTERNAL   DFHEI1 . . . . . . . . . . . .  392 412 431 475 490 494 501 509 515
+EXTERNAL   DSNHLI . . . . . . . . . . . .  460
+      24   LGICDB01PP 5655-EC6 IBM Enterprise COBOL for z/OS  6.3.0 P200319       LGICDB01  Date 12/23/2020  Time 10:46:42   Page    21
+
+
+         COPY/BASIS cross-reference of text-names, library names and dataset information
+
+ Text-name Library   File name                                    Concat   ISPF statistics
+ (Member)  (DDNAME)  (Dataset name)                               Level    Created         Changed
+
+ LGCMAREA  SYSLIB    ADCDMST.GENAPP.COPY                            0
+ LGPOLICY  SYSLIB    ADCDMST.GENAPP.COPY                            0
+PP 5655-EC6 IBM Enterprise COBOL for z/OS  6.3.0 P200319       LGICDB01  Date 12/23/2020  Time 10:46:42   Page    22
+
+LineID  Message code  Message text
+
+        IGYDS0139-W   Diagnostic messages were issued during processing of compiler options.  These messages are located at the
+                      beginning of the listing.
+
+   518  IGYSC0208-I   DSNH050I DSNHPSRV  WARNINGS HAVE BEEN SUPPRESSED DUE TO LACK OF TABLE DECLARATIONS
+
+
+Messages    Total    Informational    Warning    Error    Severe    Terminating
+
+Printed:       7           4              3
+
+
+* Statistics for COBOL program LGICDB01:
+*    Source records = 1094
+*    Data Division statements = 403
+*    Procedure Division statements = 45
+*    Generated COBOL statements = 97
+*    Program complexity factor = 149
+
+End of compilation 1,  program LGICDB01,  highest severity 4.
+
+Return code 4
+1z/OS V2 R4 BINDER     10:47:01 WEDNESDAY DECEMBER 23, 2020
+ BATCH EMULATOR  JOB(ADCDMST8) STEP(*OMVSEX ) PGM= IEWBLINK
+ IEW2278I B352 INVOCATION PARAMETERS - MAP,RENT,COMPAT(PM5)
+
+1                         *** M O D U L E  M A P ***
+
+ ---------------
+ CLASS  C_CODE            LENGTH =     13D8  ATTRIBUTES = CAT,   LOAD, RMODE=ANY
+                          OFFSET =        0 IN SEGMENT 001     ALIGN = DBLWORD
+ ---------------
+
+  SECTION    CLASS                                      ------- SOURCE --------
+   OFFSET   OFFSET  NAME                TYPE    LENGTH  DDNAME   SEQ  MEMBER
+
+                 0  LGICDB01           CSECT      13D8  SYSLIN    01  **NULL**
+        0        0     LGICDB01#C         LABEL
+        0        0     LGICDB01           LABEL
+
+ ---------------
+ CLASS  C_@@PPA2          LENGTH =        8  ATTRIBUTES = MRG,   LOAD, RMODE=ANY
+                          OFFSET =     13D8 IN SEGMENT 001     ALIGN = DBLWORD
+ ---------------
+
+             CLASS
+            OFFSET  NAME                TYPE    LENGTH   SECTION
+                 0  $PRIV000010      PART             8  LGICDB01
+
+ ---------------
+ CLASS  C_@@CSINIT        LENGTH =        4  ATTRIBUTES = MRG,   LOAD, RMODE=ANY
+                          OFFSET =     13E0 IN SEGMENT 001     ALIGN = DBLWORD
+ ---------------
+
+             CLASS
+            OFFSET  NAME                TYPE    LENGTH   SECTION
+                 0  $PRIV000011      PART             4  LGICDB01
+
+ ---------------
+ CLASS  B_TEXT            LENGTH =      C70  ATTRIBUTES = CAT,   LOAD, RMODE=ANY
+                          OFFSET =     13E8 IN SEGMENT 001     ALIGN = DBLWORD
+ ---------------
+
+  SECTION    CLASS                                      ------- SOURCE --------
+   OFFSET   OFFSET  NAME                TYPE    LENGTH  DDNAME   SEQ  MEMBER
+
+                 0  IGZXBS61        *  CSECT        10  SYSLIB    02  IGZXBS61
+
+                10  CEESG004        *  CSECT        34  SYSLIB    02  CEESG004
+
+                48  IGZXRT1         *  CSECT        12  SYSLIB    02  IGZXRT1
+
+                60  IGZXVMO         *  CSECT        12  SYSLIB    02  IGZXVMO
+
+                78  IGZXCMSG        *  CSECT        12  SYSLIB    02  IGZXCMSG
+
+                90  IGZXPRS         *  CSECT        12  SYSLIB    02  IGZXPRS
+
+                A8  DSNCLI          *  CSECT        6C  SYSLIB    03  DSNHLI
+        0       A8     DSNHLI             LABEL
+       30       D8     DSNWLI             LABEL
+
+               118  DFHEAI          *  CSECT        28  SYSLIB    03  DFHEI1
+        8      120     DFHEI1             LABEL
+
+               140  IGZXBST4        *  CSECT       4E0  SYSLIB    02  IGZXBST4
+1                         *** M O D U L E  M A P ***
+
+  SECTION    CLASS                                      ------- SOURCE --------
+   OFFSET   OFFSET  NAME                TYPE    LENGTH  DDNAME   SEQ  MEMBER
+
+
+               620  CEEBETBL        *  CSECT        28  SYSLIB    02  CEEBETBL
+
+               648  CEESTART        *  CSECT        B0  SYSLIB    02  CEESTART
+
+               6F8  CEEBPUBT        *  CSECT        70  SYSLIB    02  CEEBPUBT
+
+               768  CEEBTRM         *  CSECT        74  SYSLIB    02  CEEBTRM
+
+               7E0  CEECPYRT        *  CSECT        CF  SYSLIB    02  CEEBTRM
+
+               8B0  CEEBLLST        *  CSECT        5C  SYSLIB    02  CEEBLLST
+       10      8C0     CEELLIST           LABEL
+
+               910  CEEBINT         *  CSECT         8  SYSLIB    02  CEEBINT
+
+               918  CEEARLU         *  CSECT        B8  SYSLIB    02  CEEARLU
+
+               9D0  CEEBPIRA        *  CSECT       2A0  SYSLIB    02  CEEINT
+        0      9D0     CEEINT             LABEL
+        0      9D0     CEEBPIRB           LABEL
+        0      9D0     CEEBPIRC           LABEL
+1                         *** M O D U L E  M A P ***
+
+ ---------------
+ CLASS  B_LIT             LENGTH =      100  ATTRIBUTES = CAT,   LOAD, RMODE=ANY
+                          OFFSET =     2058 IN SEGMENT 001     ALIGN = DBLWORD
+ ---------------
+
+  SECTION    CLASS                                      ------- SOURCE --------
+   OFFSET   OFFSET  NAME                TYPE    LENGTH  DDNAME   SEQ  MEMBER
+
+                 0  IEWBLIT            CSECT       100                **NULL**
+        0        0     IEWBLIT            LABEL
+
+ ---------------
+ CLASS  C_WSA             LENGTH =       B8  ATTRIBUTES = MRG, DEFER , RMODE=ANY
+                          OFFSET =        0 IN SEGMENT 002     ALIGN = DBLWORD
+ ---------------
+
+             CLASS
+            OFFSET  NAME                TYPE    LENGTH   SECTION
+                 0  $PRIV000012      PART            10
+                10  LGICDB01#S       PART            A8  LGICDB01
+
+ ---------------
+ CLASS  C_CEESG003        LENGTH =        0  ATTRIBUTES = CAT, NOLOAD
+
+ ---------------
+
+  SECTION    CLASS                                      ------- SOURCE --------
+   OFFSET   OFFSET  NAME                TYPE    LENGTH  DDNAME   SEQ  MEMBER
+
+                 0  LGICDB01           CSECT         0  SYSLIN    01  **NULL**
+1          ***  DATA SET SUMMARY  ***
+
+ DDNAME    CONCAT   FILE IDENTIFICATION
+
+ SYSLIB      02     CEE.SCEELKED
+ SYSLIB      03     DFH550.CICS.SDFHLOAD
+ SYSLIN      01     SYS20358.T104641.RA000.ADCDMST8.TEMPOBJ.H01
+1          *** SYMBOL REFERENCES NOT ASSOCIATED WITH ANY ADCON ***
+
+ TYPE   SCOPE   NAME
+
+
+           *** E N D  O F  M O D U L E  M A P ***
+
+
+
+                                 *** O P E R A T I O N   S U M M A R Y   R E P O R T ***
+
+1PROCESSING OPTIONS:
+
+    ALIASES             NO
+    ALIGN2              NO
+    AMODE               UNSPECIFIED
+    CALL                YES
+    CASE                UPPER
+    COMPAT              ZOSV1R8
+    COMPRESS            AUTO
+    DCBS                NO
+    DYNAM               NO
+    EXTATTR             UNSPECIFIED
+    EXITS:              NONE
+    FILL                NONE
+    GID                 UNSPECIFIED
+    HOBSET              NO
+    INFO                NO
+    LET                 04
+    LINECT              060
+    LIST                SUMMARY
+    LISTPRIV            NO
+    LONGPARM            NO
+    MAP                 YES
+    MAXBLK              032760
+    MODMAP              NO
+    MSGLEVEL            00
+    OVLY                NO
+    PRINT               YES
+    RES                 NO
+    REUSABILITY         REENTRANT
+    RMODE               UNSPECIFIED
+    RMODEX              NO
+    SIGN                NO
+    STORENX             NOREPLACE
+    STRIPCL             NO
+    STRIPSEC            NO
+    SYMTRACE
+    TERM                NO
+    TRAP                ON
+    UID                 UNSPECIFIED
+    UPCASE              NO
+    WKSPACE             000000K,000000K
+    XCAL                NO
+    XREF                NO
+    ***END OF OPTIONS***
+
+
+
+
+1SAVE OPERATION SUMMARY:
+
+    MEMBER NAME         LGICDB01
+    LOAD LIBRARY        ADCDMST.GENAPP.LOAD
+    PROGRAM TYPE        PROGRAM OBJECT(FORMAT 5 OS COMPAT LEVEL z/OS V1R8 )
+    VOLUME SERIAL       B4USR1
+    DISPOSITION         ADDED NEW
+    TIME OF SAVE        10.47.03  DEC 23, 2020
+
+
+1SAVE MODULE ATTRIBUTES:
+
+    AC                  000
+    AMODE                31
+    COMPRESSION         BINDER DATA
+    DC                  NO
+    EDITABLE            YES
+    EXCEEDS 16MB        NO
+    EXECUTABLE          YES
+    LONGPARM            NO
+    MIGRATABLE          NO
+    OL                  NO
+    OVLY                NO
+    PACK,PRIME          NO,NO
+    PAGE ALIGN          NO
+    REFR                NO
+    RENT                YES
+    REUS                YES
+    RMODE               ANY
+    SCTR                NO
+    SIGN                NO
+    SSI
+    SYM GENERATED       NO
+    TEST                NO
+    XPLINK              NO
+    MODULE SIZE (HEX)   00002210
+    DASD SIZE (HEX)     00008000
+
+
+1 ENTRY POINT AND ALIAS SUMMARY:
+
+  NAME:            ENTRY TYPE AMODE C_OFFSET CLASS NAME        STATUS
+
+  LGICDB01          MAIN_EP      31 00000000 C_CODE
+
+                          *** E N D   O F   O P E R A T I O N   S U M M A R Y   R E P O R T ***
+
+
+
+
+1z/OS V2 R4 BINDER     10:47:01 WEDNESDAY DECEMBER 23, 2020
+ BATCH EMULATOR  JOB(ADCDMST8) STEP(*OMVSEX ) PGM= IEWBLINK
+ IEW2008I 0F03 PROCESSING COMPLETED.  RETURN CODE =  0.
+
+
+
+1----------------------
+ MESSAGE SUMMARY REPORT
+ ----------------------
+  TERMINAL MESSAGES      (SEVERITY = 16)
+  NONE
+
+  SEVERE MESSAGES        (SEVERITY = 12)
+  NONE
+
+  ERROR MESSAGES         (SEVERITY = 08)
+  NONE
+
+  WARNING MESSAGES       (SEVERITY = 04)
+  NONE
+
+  INFORMATIONAL MESSAGES (SEVERITY = 00)
+  2008  2278
+
+
+  **** END OF MESSAGE SUMMARY REPORT ****
+
